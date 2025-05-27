@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Birthday Cake Animation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffd1dc, #ffb6c1, #ffc8e7);
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        
+        .container {
+            position: relative;
+            width: 600px;
+            height: 500px;
+        }
+        
+        .cake-base {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 20px;
+            width: 300px;
+            background-color: #8B4513;
+            border-radius: 10px 10px 0 0;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .cake-layer {
+            position: absolute;
+            height: 50px;
+            background-color: #F8C8DC;
+            border-radius: 10px 10px 0 0;
+            transform: translateX(-50%);
+            left: 200%;
+            z-index: 2;
+            transition: left 1s ease-out;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        
+        .cake-layer.right {
+            left: -100%;
+        }
+        
+        .cake-layer:nth-child(2) {
+            bottom: 120px;
+            width: 280px;
+            background: linear-gradient(to right, #F4A7B9, #FFB6C1, #F4A7B9);
+        }
+        
+        .cake-layer:nth-child(3) {
+            bottom: 170px;
+            width: 250px;
+            background: linear-gradient(to right, #F8C8DC, #FFCCE5, #F8C8DC);
+        }
+        
+        .cake-layer:nth-child(4) {
+            bottom: 220px;
+            width: 220px;
+            background: linear-gradient(to right, #F4A7B9, #FFB6C1, #F4A7B9);
+        }
+        
+        .cake-layer:nth-child(5) {
+            bottom: 270px;
+            width: 190px;
+            background: linear-gradient(to right, #F8C8DC, #FFCCE5, #F8C8DC);
+        }
+        
+        .frosting {
+            position: absolute;
+            height: 10px;
+            background-color: #FFFFFF;
+            border-radius: 5px;
+            transform: translateX(-50%);
+            left: 50%;
+            opacity: 0;
+            z-index: 3;
+        }
+        
+        .frosting:nth-child(6) {
+            bottom: 170px;
+            width: 250px;
+        }
+        
+        .frosting:nth-child(7) {
+            bottom: 220px;
+            width: 220px;
+        }
+        
+        .frosting:nth-child(8) {
+            bottom: 270px;
+            width: 190px;
+        }
+        
+        .frosting:nth-child(9) {
+            bottom: 320px;
+            width: 190px;
+        }
+        
+        .candle {
+            position: absolute;
+            width: 10px;
+            height: 30px;
+            background: linear-gradient(to bottom, #FF0000, #FF6347, #FF4500);
+            border-radius: 5px 5px 0 0;
+            z-index: 4;
+            bottom: 320px;
+            transform: translateX(-50%) translateY(-100%);
+            opacity: 0;
+        }
+        
+        .flame {
+            position: absolute;
+            width: 10px;
+            height: 15px;
+            background: linear-gradient(to bottom, #FFFF00, #FFA500);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            top: -15px;
+            left: 0;
+            animation: flicker 0.5s infinite alternate;
+            opacity: 0;
+        }
+        
+        @keyframes flicker {
+            0% {
+                transform: scaleY(1.0) scaleX(1.0);
+            }
+            100% {
+                transform: scaleY(0.8) scaleX(0.9);
+            }
+        }
+        
+        .message {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            font-weight: bold;
+            color: #FF1493;
+            text-align: center;
+            opacity: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: bounce 1s infinite alternate;
+            font-family: 'Dancing Script', cursive;
+        }
+        
+        @keyframes bounce {
+            0% {
+                transform: translateX(-50%) scale(1);
+            }
+            100% {
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #FF1493;
+            opacity: 0;
+            animation: float 3s infinite ease-in-out;
+            z-index: 5;
+        }
+        
+        .flower {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            animation: spin 4s infinite linear;
+            z-index: 5;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FFD700;
+            opacity: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cake-base"></div>
+        <div class="cake-layer right"></div>
+        <div class="cake-layer"></div>
+        <div class="cake-layer right"></div>
+        <div class="cake-layer"></div>
+        <div class="frosting"></div>
+        <div class="frosting"></div>
+        <div class="frosting"></div>
+        <div class="frosting"></div>
+        
+        <div class="candle" style="left: 40%;">
+            <div class="flame"></div>
+        </div>
+        <div class="candle" style="left: 50%;">
+            <div class="flame"></div>
+        </div>
+        <div class="candle" style="left: 60%;">
+            <div class="flame"></div>
+        </div>
+        
+        
+        <!-- Hearts and flowers -->
+        <div class="heart" style="top: 100px; left: 20%;">❤️</div>
+        <div class="heart" style="top: 150px; left: 80%;">💕</div>
+        <div class="heart" style="top: 200px; left: 30%;">💖</div>
+        <div class="heart" style="top: 80px; left: 70%;">💗</div>
+        
+        <div class="flower" style="top: 120px; left: 25%;">🌸</div>
+        <div class="flower" style="top: 180px; left: 75%;">🌹</div>
+        <div class="flower" style="top: 220px; left: 15%;">🌷</div>
+        <div class="flower" style="top: 100px; left: 85%;">💐</div>
+        
+        <!-- Confetti particles -->
+        <div class="confetti" style="top: 0; left: 10%;"></div>
+        <div class="confetti" style="top: 0; left: 20%;"></div>
+        <div class="confetti" style="top: 0; left: 30%;"></div>
+        <div class="confetti" style="top: 0; left: 40%;"></div>
+        <div class="confetti" style="top: 0; left: 50%;"></div>
+        <div class="confetti" style="top: 0; left: 60%;"></div>
+        <div class="confetti" style="top: 0; left: 70%;"></div>
+        <div class="confetti" style="top: 0; left: 80%;"></div>
+        <div class="confetti" style="top: 0; left: 90%;"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                // Animate first layer
+                document.querySelectorAll('.cake-layer')[0].style.left = '50%';
+                
+                setTimeout(function() {
+                    // Animate second layer
+                    document.querySelectorAll('.cake-layer')[1].style.left = '50%';
+                    
+                    setTimeout(function() {
+                        // Animate third layer
+                        document.querySelectorAll('.cake-layer')[2].style.left = '50%';
+                        
+                        setTimeout(function() {
+                            // Animate fourth layer
+                            document.querySelectorAll('.cake-layer')[3].style.left = '50%';
+                            
+                            // Show frosting after layers are in place
+                            setTimeout(function() {
+                                const frostings = document.querySelectorAll('.frosting');
+                                for (let i = 0; i < frostings.length; i++) {
+                                    setTimeout(function() {
+                                        frostings[i].style.opacity = '1';
+                                    }, i * 300);
+                                }
+                                
+                                // Show candles after frosting
+                                setTimeout(function() {
+                                    const candles = document.querySelectorAll('.candle');
+                                    for (let i = 0; i < candles.length; i++) {
+                                        setTimeout(function() {
+                                            candles[i].style.opacity = '1';
+                                            
+                                            // Light candles
+                                            setTimeout(function() {
+                                                candles[i].querySelector('.flame').style.opacity = '1';
+                                            }, 300);
+                                        }, i * 500);
+                                    }
+                                    
+                                    // Show hearts and flowers
+                                    setTimeout(function() {
+                                        const hearts = document.querySelectorAll('.heart');
+                                        const flowers = document.querySelectorAll('.flower');
+                                        
+                                        for (let i = 0; i < hearts.length; i++) {
+                                            setTimeout(function() {
+                                                hearts[i].style.opacity = '1';
+                                            }, i * 200);
+                                        }
+                                        
+                                        for (let i = 0; i < flowers.length; i++) {
+                                            setTimeout(function() {
+                                                flowers[i].style.opacity = '1';
+                                            }, i * 200);
+                                        }
+                                        
+                                        // Animate confetti
+                                        const confetti = document.querySelectorAll('.confetti');
+                                        for (let i = 0; i < confetti.length; i++) {
+                                            setTimeout(function() {
+                                                const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                                                confetti[i].style.backgroundColor = color;
+                                                confetti[i].style.opacity = '1';
+                                                confetti[i].style.transform = `rotate(${Math.random() * 360}deg)`;
+                                                
+                                                // Make confetti fall
+                                                const duration = 2 + Math.random() * 3;
+                                                confetti[i].style.transition = `top ${duration}s linear, left ${duration}s ease-in-out`;
+                                                confetti[i].style.top = '100%';
+                                                confetti[i].style.left = `${parseInt(confetti[i].style.left) + (Math.random() * 20 - 10)}%`;
+                                            }, i * 100);
+                                        }
+                                        
+                                        // Show message at the end with hearts
+                                        setTimeout(function() {
+                                            document.querySelector('.message').style.opacity = '1';
+                                            
+                                            // Create more confetti
+                                            createMoreConfetti();
+                                        }, 1000);
+                                    }, candles.length * 500 + 500);
+                                }, frostings.length * 300 + 500);
+                            }, 1000);
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 500);
+            
+            function createMoreConfetti() {
+                const container = document.querySelector('.container');
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.top = '0';
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.width = `${5 + Math.random() * 10}px`;
+                    confetti.style.height = `${5 + Math.random() * 10}px`;
+                    confetti.style.opacity = '0';
+                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    
+                    container.appendChild(confetti);
+                    
+                    setTimeout(function() {
+                        confetti.style.opacity = '1';
+                        confetti.style.transition = `top ${3 + Math.random() * 4}s linear, left ${3 + Math.random() * 4}s ease-in-out`;
+                        confetti.style.top = '100%';
+                        confetti.style.left = `${parseInt(confetti.style.left) + (Math.random() * 40 - 20)}%`;
+                    }, i * 50);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

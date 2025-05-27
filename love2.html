@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do You Love Me?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .cute-character {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            font-size: 50px;
+            z-index: 9;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+        
+        .container:hover {
+            transform: scale(1.02);
+        }
+        
+        h1 {
+            color: #e83e8c;
+            margin-bottom: 30px;
+            font-size: 3rem;
+            animation: pulse 1.5s infinite alternate;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 40px;
+        }
+        
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            animation: grow 1s infinite alternate;
+        }
+        
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .result {
+            display: none;
+            margin-top: 30px;
+            font-size: 2rem;
+            color: #e83e8c;
+            animation: fadeIn 1s ease-in-out;
+            font-weight: bold;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff4081;
+            transform: rotate(45deg);
+            opacity: 0;
+            z-index: 1;
+        }
+        
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff4081;
+            border-radius: 50%;
+        }
+        
+        .heart::before {
+            top: -15px;
+            left: 0;
+        }
+        
+        .heart::after {
+            top: 0;
+            left: -15px;
+        }
+        
+        .flower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            z-index: 1;
+            opacity: 0.7;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes grow {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.1);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1) rotate(45deg);
+            }
+            14% {
+                transform: scale(1.3) rotate(45deg);
+            }
+            28% {
+                transform: scale(1) rotate(45deg);
+            }
+            42% {
+                transform: scale(1.3) rotate(45deg);
+            }
+            70% {
+                transform: scale(1) rotate(45deg);
+            }
+        }
+        
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+        }
+        
+        .flying-heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff4081;
+            transform: rotate(45deg);
+            opacity: 0;
+            z-index: 4;
+        }
+        
+        .flying-heart::before,
+        .flying-heart::after {
+            content: '';
+            position: absolute;
+            width: B20px;
+            height: 20px;
+            background-color: #ff4081;
+            border-radius: 50%;
+        }
+        
+        .flying-heart::before {
+            top: -10px;
+            left: 0;
+        }
+        
+        .flying-heart::after {
+            top: 0;
+            left: -10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌸 Do You Love Me? 🌸</h1>
+        <div class="buttons">
+            <button id="yesBtn">Yes 💖</button>
+            <button id="noBtn">No 😢</button>
+        </div>
+        <div class="result" id="result">I knew it! 💝 💘 💓</div>
+    </div>
+    
+    <div class="celebration" id="celebration"></div>
+    
+    <script>
+        // Create floating hearts and flowers
+        function createFloatingElements() {
+            const numElements = 20;
+            const cuteEmojis = ['🌸', '🌹', '🌺', '🌷', '💐', '🥰', '😍', '🦋', '✨', '💫'];
+            
+            for (let i = 0; i < numElements; i++) {
+                // Create hearts
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                heart.style.animationName = 'float, heartBeat';
+                heart.style.animationDuration = (Math.random() * 5 + 5) + 's, 1.5s';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.animationIterationCount = 'infinite';
+                heart.style.animationDirection = 'alternate';
+                document.body.appendChild(heart);
+                
+                // Create cute emoji characters
+                if (i < 10) {
+                    const emoji = document.createElement('div');
+                    emoji.classList.add('cute-character');
+                    emoji.textContent = cuteEmojis[i % cuteEmojis.length];
+                    emoji.style.left = Math.random() * 100 + 'vw';
+                    emoji.style.top = Math.random() * 100 + 'vh';
+                    emoji.style.animationDuration = (Math.random() * 6 + 4) + 's';
+                    emoji.style.animationDelay = Math.random() * 5 + 's';
+                    document.body.appendChild(emoji);
+                }
+                
+                // Create flowers
+                const flower = document.createElement('div');
+                flower.classList.add('flower');
+                flower.style.left = Math.random() * 100 + 'vw';
+                flower.style.top = Math.random() * 100 + 'vh';
+                flower.style.opacity = Math.random() * 0.7 + 0.3;
+                flower.style.animationName = 'float';
+                flower.style.animationDuration = (Math.random() * 6 + 4) + 's';
+                flower.style.animationDelay = Math.random() * 5 + 's';
+                flower.style.animationIterationCount = 'infinite';
+                flower.style.animationDirection = 'alternate';
+                
+                // Create flower petals with CSS
+                flower.style.backgroundImage = 'radial-gradient(circle at center, #ff9a9e 0%, #ff9a9e 30%, transparent 30%)';
+                flower.style.backgroundSize = '100% 100%';
+                flower.style.backgroundPosition = 'center';
+                flower.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+                
+                // Add petals with pseudo-elements via style
+                const style = document.createElement('style');
+                const id = 'flower-' + i;
+                flower.id = id;
+                
+                const rotation = Math.random() * 20 - 10;
+                style.textContent = `
+                    #${id}::before, #${id}::after {
+                        content: '';
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        top: 0;
+                        left: 0;
+                        background-image: radial-gradient(circle at center, #ff9a9e 0%, #ff9a9e 30%, transparent 30%);
+                        background-size: 100% 100%;
+                        background-position: center;
+                    }
+                    #${id}::before {
+                        transform: rotate(${rotation + 45}deg);
+                    }
+                    #${id}::after {
+                        transform: rotate(${rotation + 90}deg);
+                    }
+                `;
+                
+                document.head.appendChild(style);
+                document.body.appendChild(flower);
+            }
+        }
+        
+        // No button movement
+        const noBtn = document.getElementById('noBtn');
+        
+        noBtn.addEventListener('mouseover', function() {
+            const containerWidth = document.querySelector('.container').getBoundingClientRect().width;
+            const containerHeight = document.querySelector('.container').getBoundingClientRect().height;
+            
+            const randomX = Math.random() * (containerWidth - 100);
+            const randomY = Math.random() * (containerHeight - 50);
+            
+            this.style.position = 'absolute';
+            this.style.left = randomX + 'px';
+            this.style.top = randomY + 'px';
+            this.style.transform = 'scale(0.9)';
+            this.textContent = "Try again 🙈";
+            
+            setTimeout(() => {
+                this.textContent = "No 😢";
+                this.style.transform = 'scale(1)';
+            }, 500);
+        });
+        
+        // Yes button click
+        const yesBtn = document.getElementById('yesBtn');
+        const result = document.getElementById('result');
+        const celebration = document.getElementById('celebration');
+        
+        yesBtn.addEventListener('click', function() {
+            // Hide buttons
+            document.querySelector('.buttons').style.display = 'none';
+            
+            // Show result
+            result.style.display = 'block';
+            
+            // Show celebration
+            celebration.style.display = 'block';
+            
+            // Change heading
+            document.querySelector('h1').innerHTML = "❤️ I Love You Too! ❤️";
+            
+            // Create more hearts
+            createCelebration();
+            
+            // Add heart beat animation to container
+            document.querySelector('.container').style.animation = 'pulse 0.5s infinite alternate';
+            document.querySelector('.container').style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            document.querySelector('.container').style.boxShadow = '0 10px 50px rgba(232, 62, 140, 0.3)';
+        });
+        
+        // Create celebration effects
+        function createCelebration() {
+            // Create confetti
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random color
+                const colors = ['#ff4081', '#e83e8c', '#fd79a8', '#fab1a0', '#ff9a9e', '#fad0c4'];
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random position
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-20px';
+                
+                // Random size
+                const size = Math.random() * 10 + 5;
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                
+                // Random shape
+                const shapes = ['circle', 'square', 'triangle'];
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                
+                if (shape === 'circle') {
+                    confetti.style.borderRadius = '50%';
+                } else if (shape === 'triangle') {
+                    confetti.style.width = '0';
+                    confetti.style.height = '0';
+                    confetti.style.borderLeft = (size/2) + 'px solid transparent';
+                    confetti.style.borderRight = (size/2) + 'px solid transparent';
+                    confetti.style.borderBottom = size + 'px solid ' + colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.backgroundColor = 'transparent';
+                }
+                
+                // Animation
+                confetti.style.opacity = '1';
+                confetti.style.animation = `
+                    fadeIn 0.5s ease-in,
+                    fall ${Math.random() * 5 + 3}s linear infinite
+                `;
+                
+                // Add to celebration
+                celebration.appendChild(confetti);
+                
+                // Create keyframes for falling
+                const style = document.createElement('style');
+                const id = 'confetti-' + i;
+                confetti.id = id;
+                
+                const horizontalMovement = (Math.random() - 0.5) * 30;
+                const rotationSpeed = Math.random() * 360;
+                
+                style.textContent = `
+                    @keyframes fall {
+                        0% {
+                            transform: translateY(0) rotate(0deg);
+                        }
+                        100% {
+                            transform: translateY(100vh) translateX(${horizontalMovement}vw) rotate(${rotationSpeed}deg);
+                        }
+                    }
+                `;
+                
+                document.head.appendChild(style);
+            }
+            
+            // Create flying hearts
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('flying-heart');
+                
+                // Random position at the bottom
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.bottom = '-20px';
+                heart.style.opacity = '1';
+                
+                // Random size
+                const size = Math.random() * 15 + 10;
+                heart.style.width = size + 'px';
+                heart.style.height = size + 'px';
+                
+                // Animation
+                const duration = Math.random() * 4 + 3;
+                const horizontalMovement = (Math.random() - 0.5) * 30;
+                
+                heart.style.animation = `
+                    flyUp ${duration}s ease-out infinite
+                `;
+                
+                // Add to celebration
+                celebration.appendChild(heart);
+                
+                // Create keyframes for flying up
+                const style = document.createElement('style');
+                const id = 'flying-heart-' + i;
+                heart.id = id;
+                
+                style.textContent = `
+                    @keyframes flyUp {
+                        0% {
+                            transform: translateY(0) translateX(0) rotate(45deg) scale(1);
+                            opacity: 1;
+                        }
+                        70% {
+                            opacity: 0.7;
+                        }
+                        100% {
+                            transform: translateY(-100vh) translateX(${horizontalMovement}vw) rotate(45deg) scale(0.5);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                
+                document.head.appendChild(style);
+                
+                // Add before and after elements to hearts
+                const beforeAfterStyle = document.createElement('style');
+                beforeAfterStyle.textContent = `
+                    #${id}::before, #${id}::after {
+                        content: '';
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        background-color: #ff4081;
+                        border-radius: 50%;
+                    }
+                    #${id}::before {
+                        top: -${size/2}px;
+                        left: 0;
+                    }
+                    #${id}::after {
+                        top: 0;
+                        left: -${size/2}px;
+                    }
+                `;
+                
+                document.head.appendChild(beforeAfterStyle);
+            }
+        }
+        
+        // Initialize floating elements
+        createFloatingElements();
+    </script>
+</body>
+</html>

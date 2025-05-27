@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Birthday Celebration</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400&display=swap');
+        
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0524 0%, #1a0a33 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        #birthday-message {
+            display: none;
+            color: #fff;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            animation: fadeIn 3s ease-in;
+            max-width: 80%;
+        }
+        
+        #birthday-message h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 50%, #ffecd2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        #birthday-message p {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+            color: #ffecd2;
+            font-weight: 300;
+        }
+        
+        .heart {
+            display: inline-block;
+            color: #ff6b95;
+            animation: beat 1s infinite alternate;
+            transform-origin: center;
+            margin: 0 5px;
+        }
+        
+        @keyframes beat {
+            to { transform: scale(1.3); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        #start-btn {
+            background: linear-gradient(45deg, #ff9a9e 0%, #ff6b95 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(255, 107, 149, 0.5);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        #start-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 149, 0.7);
+        }
+        
+        .rose-petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle at 30% 30%, #ff9a9e, #ff6b95);
+            border-radius: 100% 0 100% 0;
+            opacity: 0.8;
+            z-index: 0;
+            animation: fall 8s linear infinite;
+        }
+        
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="start-btn">Begin Our Journey</button>
+    <div id="birthday-message">
+        <h1>Happy Birthday</h1>
+        <p>Every moment with you feels like magic.<br>
+        Today is all about celebrating your beautiful heart and our journey together.<br>
+        <span class="heart">♥</span> Forever yours <span class="heart">♥</span></p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('start-btn');
+        const birthdayMessage = document.getElementById('birthday-message');
+        
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Create rose petals falling effect
+        function createRosePetals() {
+            for (let i = 0; i < 30; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('rose-petal');
+                petal.style.left = `${Math.random() * 100}%`;
+                petal.style.animationDelay = `${Math.random() * 5}s`;
+                petal.style.opacity = `${Math.random() * 0.5 + 0.3}`;
+                petal.style.width = `${Math.random() * 15 + 10}px`;
+                petal.style.height = `${Math.random() * 15 + 10}px`;
+                document.body.appendChild(petal);
+            }
+        }
+        
+        // Firework particles
+        let particles = [];
+        let hearts = [];
+        
+        // Firework colors - more romantic palette
+        const colors = [
+            '#ff9a9e', '#ff6b95', '#fad0c4', '#ffecd2', 
+            '#a18cd1', '#fbda61', '#ffacb7', '#ffc3a0'
+        ];
+        
+        // Particle class
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 2.5 + 1;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 6,
+                    y: (Math.random() - 0.5) * 6
+                };
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.003; // Slower decay
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                
+                // Add glow effect
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                
+                ctx.restore();
+            }
+            
+            update() {
+                this.velocity.y += 0.02; // Gentler gravity
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= this.decay;
+                
+                this.draw();
+            }
+        }
+        
+        // Heart particle class for special fireworks
+        class Heart {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 15 + 10;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 4,
+                    y: (Math.random() - 0.5) * 4
+                };
+                this.alpha = 1;
+                this.decay = Math.random() * 0.01 + 0.003;
+                this.rotation = Math.random() * Math.PI * 2;
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.scale(this.size / 30, this.size / 30);
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-10, -10, -10, -20, 0, -20);
+                ctx.bezierCurveTo(10, -20, 10, -10, 0, 0);
+                ctx.bezierCurveTo(-10, 10, -20, 0, 0, 15);
+                ctx.bezierCurveTo(20, 0, 10, 10, 0, 0);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                
+                // Add glow effect
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                
+                ctx.restore();
+            }
+            
+            update() {
+                this.velocity.y += 0.01; // Very gentle gravity
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= this.decay;
+                this.rotation += 0.01;
+                
+                this.draw();
+            }
+        }
+        
+        // Create firework explosion
+        function createFirework(x, y, isHeart = false) {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            if (isHeart) {
+                // Create heart-shaped firework
+                for (let i = 0; i < 15; i++) {
+                    hearts.push(new Heart(x, y));
+                }
+            } else {
+                // Create normal particle firework with more particles
+                const particleCount = Math.floor(Math.random() * 80) + 150;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle(x, y, color));
+                }
+            }
+        }
+        
+        // Animation loop
+        let fireworkCount = 0;
+        let maxFireworks = 25; // More fireworks
+        let animationId;
+        let lastFireworkTime = 0;
+        
+        function animate(timestamp) {
+            animationId = requestAnimationFrame(animate);
+            ctx.fillStyle = 'rgba(15, 5, 36, 0.15)'; // Slower fade for trailing effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Create new firework with timing control
+            if (fireworkCount < maxFireworks && timestamp - lastFireworkTime > 300) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height * 0.5; // Keep fireworks in upper part
+                
+                // 20% chance of heart firework
+                const isHeart = Math.random() < 0.2;
+                createFirework(x, y, isHeart);
+                
+                fireworkCount++;
+                lastFireworkTime = timestamp;
+            }
+            
+            // Update and remove particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                
+                if (particles[i].alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // Update and remove hearts
+            for (let i = hearts.length - 1; i >= 0; i--) {
+                hearts[i].update();
+                
+                if (hearts[i].alpha <= 0) {
+                    hearts.splice(i, 1);
+                }
+            }
+            
+            // Check if fireworks are done
+            if (fireworkCount >= maxFireworks && particles.length === 0 && hearts.length === 0) {
+                cancelAnimationFrame(animationId);
+                birthdayMessage.style.display = 'block';
+            }
+        }
+        
+        // Start celebration
+        startBtn.addEventListener('click', () => {
+            startBtn.style.display = 'none';
+            createRosePetals();
+            animate(0);
+        });
+        
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

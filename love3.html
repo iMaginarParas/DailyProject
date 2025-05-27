@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Celebration</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        #birthday-message {
+            display: none;
+            color: #fff;
+            font-size: 4rem;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        #start-btn {
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4);
+        }
+        
+        #start-btn:hover {
+            background-color: #f50057;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 64, 129, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="start-btn">Start Celebration!</button>
+    <div id="birthday-message">
+        <h1>Happy Birthday!</h1>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('start-btn');
+        const birthdayMessage = document.getElementById('birthday-message');
+        
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Firework particles
+        let particles = [];
+        
+        // Firework colors
+        const colors = [
+            '#FF0000', '#00FF00', '#0000FF', '#FFFF00', 
+            '#FF00FF', '#00FFFF', '#FFA500', '#FF1493'
+        ];
+        
+        // Particle class
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 3 + 1;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
+                };
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.005;
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+            
+            update() {
+                this.velocity.y += 0.03; // Gravity
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= this.decay;
+                
+                this.draw();
+            }
+        }
+        
+        // Create firework explosion
+        function createFirework(x, y) {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const particleCount = Math.floor(Math.random() * 50) + 100;
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+        
+        // Animation loop
+        let fireworkCount = 0;
+        let maxFireworks = 15;
+        let animationId;
+        
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Create new firework every 30 frames
+            if (fireworkCount < maxFireworks && Math.random() > 0.95) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height * 0.6;
+                createFirework(x, y);
+                fireworkCount++;
+            }
+            
+            // Update and remove particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                
+                if (particles[i].alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // Check if fireworks are done
+            if (fireworkCount >= maxFireworks && particles.length === 0) {
+                cancelAnimationFrame(animationId);
+                birthdayMessage.style.display = 'block';
+            }
+        }
+        
+        // Start celebration
+        startBtn.addEventListener('click', () => {
+            startBtn.style.display = 'none';
+            animate();
+        });
+        
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
