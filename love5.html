@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #ff8fa3;
+            --secondary-color: #ffb3c1;
+            --accent-color: #ff5c8a;
+            --text-color: #5e2a41;
+            --light-color: #fff5f7;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle, var(--light-color) 0%, var(--secondary-color) 100%);
+            opacity: 0.6;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 100%;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background-color: var(--accent-color);
+        }
+
+        /* Birthday Flyer */
+        .birthday-flyer {
+            position: fixed;
+            top: 50%;
+            right: -100%;
+            transform: translateY(-50%);
+            width: 90%;
+            max-width: 500px;
+            background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+            border-radius: 20px;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            text-align: center;
+            transition: right 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 10;
+        }
+
+        .birthday-flyer.active {
+            right: 50%;
+            transform: translate(50%, -50%);
+        }
+
+        .flyer-content {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .flyer-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .flyer-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            line-height: 1.4;
+            margin: 1rem 0;
+        }
+
+        .heart-decoration {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .heart-1 {
+            top: 10px;
+            left: 10px;
+        }
+
+        .heart-2 {
+            top: 10px;
+            right: 10px;
+        }
+
+        .heart-3 {
+            bottom: 10px;
+            left: 10px;
+        }
+
+        .heart-4 {
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #fff;
+            border-radius: 50%;
+            filter: blur(1px);
+            box-shadow: 0 0 8px 1px #ffcff9;
+            pointer-events: none;
+            z-index: 0;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .ribbon {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 30px;
+            background-color: var(--accent-color);
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -3px 5px rgba(0, 0, 0, 0.1);
+            z-index: -1;
+        }
+
+        .click-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .birthday-flyer {
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .flyer-title {
+                font-size: 2rem;
+            }
+
+            .flyer-message {
+                font-size: 1.5rem;
+            }
+
+            .music-control {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="container">
+        <h1>A Special Day for Someone Special</h1>
+        <p>Click anywhere on the screen for a sweet surprise...</p>
+    </div>
+
+    <!-- Dedicated click area -->
+    <div class="click-area" id="clickArea"></div>
+
+    <div class="birthday-flyer" id="birthdayFlyer">
+        <div class="ribbon"></div>
+        <div class="flyer-content">
+            <div class="heart-decoration heart-1">❤️</div>
+            <div class="heart-decoration heart-2">❤️</div>
+            <div class="heart-decoration heart-3">❤️</div>
+            <div class="heart-decoration heart-4">❤️</div>
+            
+            <h2 class="flyer-title">Happy Birthday!</h2>
+            <p class="flyer-message">To my sweetest love,<br> You make every day special.<br> Today is all about you! 💖</p>
+            <p class="flyer-message">I love you more than words can say!</p>
+        </div>
+    </div>
+
+    <button class="music-control" id="musicToggle">♫</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables for tracking flyer state
+            let flyerShown = false;
+            const birthdayFlyer = document.getElementById('birthdayFlyer');
+            const clickArea = document.getElementById('clickArea');
+            
+            // Add click handler to show the flyer
+            clickArea.addEventListener('click', function(e) {
+                if (!flyerShown) {
+                    console.log("Showing flyer");
+                    birthdayFlyer.classList.add('active');
+                    flyerShown = true;
+                    
+                    // Remove click area once flyer is shown
+                    setTimeout(() => {
+                        clickArea.style.zIndex = "-1";
+                    }, 1500);
+                }
+                
+                // Create hearts on every click (even after flyer is shown)
+                createHeartsAtPosition(e.clientX, e.clientY);
+            });
+            
+            // Create hearts at a specific position
+            function createHeartsAtPosition(x, y) {
+                for (let i = 0; i < 5; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('floating-heart');
+                    heart.innerHTML = '❤️';
+                    heart.style.left = x + 'px';
+                    heart.style.top = y + 'px';
+                    heart.style.animationDuration = 5 + Math.random() * 5 + 's';
+                    document.body.appendChild(heart);
+                    
+                    // Remove after animation completes
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 5000);
+                }
+            }
+
+            // Create floating hearts randomly
+            function createFloatingHearts() {
+                const container = document.body;
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = '❤️';
+                
+                // Random position
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                
+                // Random animation duration
+                const animationDuration = 5 + Math.random() * 10;
+                heart.style.animationDuration = animationDuration + 's';
+                
+                container.appendChild(heart);
+                
+                // Remove after animation completes
+                setTimeout(() => {
+                    heart.remove();
+                }, animationDuration * 1000);
+            }
+
+            // Create sparkles
+            function createSparkle() {
+                const container = document.body;
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                
+                // Random position
+                sparkle.style.left = Math.random() * 100 + 'vw';
+                sparkle.style.top = Math.random() * 100 + 'vh';
+                
+                container.appendChild(sparkle);
+                
+                // Remove after animation completes
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 2000);
+            }
+
+            // Periodically create floating hearts and sparkles
+            setInterval(createFloatingHearts, 1000);
+            setInterval(createSparkle, 300);
+
+            // Music controls
+            const musicToggle = document.getElementById('musicToggle');
+            let musicPlaying = false;
+
+            // Create simple music (since we can't load external music)
+            function playSimpleMusic() {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    const audioCtx = new AudioContext();
+                    
+                    // Simple melody notes
+                    const notes = [
+                        {note: 'C4', duration: 1},
+                        {note: 'E4', duration: 1},
+                        {note: 'G4', duration: 1},
+                        {note: 'C5', duration: 2},
+                        {note: 'G4', duration: 1},
+                        {note: 'E4', duration: 1},
+                        {note: 'C4', duration: 2}
+                    ];
+                    
+                    let time = audioCtx.currentTime;
+                    
+                    notes.forEach(noteObj => {
+                        const oscillator = audioCtx.createOscillator();
+                        const gainNode = audioCtx.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioCtx.destination);
+                        
+                        // Map note to frequency
+                        const noteToFreq = {
+                            'C4': 261.63, 'E4': 329.63, 'G4': 392.00, 'C5': 523.25
+                        };
+                        
+                        oscillator.type = 'sine';
+                        oscillator.frequency.value = noteToFreq[noteObj.note];
+                        
+                        // Smooth start/end
+                        gainNode.gain.setValueAtTime(0, time);
+                        gainNode.gain.linearRampToValueAtTime(0.2, time + 0.1);
+                        gainNode.gain.linearRampToValueAtTime(0, time + noteObj.duration - 0.1);
+                        
+                        oscillator.start(time);
+                        oscillator.stop(time + noteObj.duration);
+                        
+                        time += noteObj.duration;
+                    });
+                } catch (e) {
+                    console.error("Error playing music:", e);
+                }
+            }
+
+            musicToggle.addEventListener('click', function() {
+                if (!musicPlaying) {
+                    playSimpleMusic();
+                    musicToggle.textContent = '♫';
+                    musicPlaying = true;
+                } else {
+                    // Can't really stop the AudioContext once it's started
+                    // but we can toggle the state for next click
+                    musicToggle.textContent = '♫';
+                    musicPlaying = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
